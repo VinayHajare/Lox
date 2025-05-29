@@ -1,0 +1,9 @@
+// First Program
+print "Hello, World!";
+var iAmVariable;
+
+iAmVariable = 10.25;
+print iAmVariable;
+
+iAmVariable = false;
+print iAmVariable;
