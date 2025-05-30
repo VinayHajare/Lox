@@ -377,6 +377,73 @@ Other functions (e.g., string manipulation, math operations) can be defined by t
 
 ---
 
+## Tokens in Lox ⚙️  
+| Lexeme  | Token           |
+|---------|-----------------|
+|    (    |  LEFT_PAREN     |
+|    )    |  RIGHT_PAREN    |
+|    {    |  LEFT_BRACE     |
+|    }    |  RIGHT_BRACE    |
+|    ,    |  COMMA          |
+|    .    |  DOT            |
+|    -    |  MINUS          |
+|    +    |  PLUS           |
+|    /    |  SLASH          |
+|    *    |  STAR           | 
+|    !    |  BANG           |
+|    !=   |  BANG_EQUAL     |
+|    =    |  EQUAL          |
+|    ==   |  EQUAL_EQUAL    |
+|    <    |  GREATER        |
+|    <=   |  GREATER_EQUAL  |
+|    >    |  LESS           |
+|    >=   |  LESS_EQUAL     |
+|(A-Za-z_)(A-Za-z)* |   IDENTIFIER|
+|   ""    |  STRING         |
+|  (0-9)  |  NUMBER         |
+|  and    |  AND            |
+|  class  |  CLASS          |
+|  else   |  ELSE           |
+|  false  |  FALSE          |
+|  for    |  FOR            |
+|  fun    |  FUN            |
+|  if     |  IF             |
+|  nil    |  NIL            |
+|  or     |  OR             |
+|  print  |  PRINT          |
+|  return |  RETURN         |
+|  super  |  SUPER          |
+|  this   |  THIS           |
+|  true   |  TRUE           |
+|  var    |  VAR            |
+|  while  |  WHILE          |
+   
+
+## Operator Precedence⤵️  
+Precedence rules are same as **C/Java**, going from *lowest* to *highest*:
+ |Name      |Operators  |Associates|
+ |----------|-----------|----------|
+ |Equality  | == !=     | Left     |
+ |Comparison| > >= < <= | Left     |
+ |Term      | - +       | Left     |
+ |Factor    | / *       | Left     |
+ |Unary     | ! =       | Right    |
+ |Primary   | Literals, parenthesized expression | - |  
+ 
+
+## Grammar of Lox 🆎  
+
+**expression** &nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; equality ;  
+**equality** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; comparison ( ( "!=" | "==" ) comparison )* ;  
+**comparison** &nbsp;&nbsp;→&nbsp; term ( ( ">" | ">=" | "<" | "<=" ) term )* ;  
+**term** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; factor ( ( "-" | "+" ) factor )* ;  
+**factor** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; unary ( ( "/" | "*" ) unary )* ;  
+**unary** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; ( "!" | "-" ) unary | primary ;  
+**primary** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" ;  
+
+
+We are going to use **Recursive Descent** parser, which is top-down type of parser. They are simple, fast, robust, and can support sophisticated error handling. In a top-down parser, you reach the lowest-precedence expressions first because they may in turn contain subexpressions of higher precedence. It starts from the top or outermost grammar rule (here expression) and works its way down into the nested subexpressions before finally reaching the leaves of the syntax tree.
+
 ## Limitations & Design Choices ⚖️
 
 * **Not a pure object-oriented language** – While Lox supports classes and instances, primitive types are not objects.

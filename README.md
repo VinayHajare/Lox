@@ -18,8 +18,10 @@ Lox/
 └── Lox.md      # Detailed language description and design notes
 
 ````
-
+*Note: Make sure you are in Lox directory before running below commands.*
 ## 🛠️ Build & Run
+
+*Note: Make sure you are in Lox directory before running below commands.*  
 
 ### CLox
 
@@ -32,9 +34,14 @@ make
 ### JLox
 
 ```bash
-cd JLox
-javac *.java
-java jlox path/to/file.lox
+# Build Jlox
+make jlox
+
+# Run REPL mode
+make repl
+
+# Run a source file
+make run FILE=path/to/file
 ```
 
 ## 📖 More Details
