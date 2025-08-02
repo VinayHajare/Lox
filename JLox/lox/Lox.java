@@ -24,6 +24,8 @@ public class Lox {
     public static boolean hadError = false;
     public static boolean hadRuntimeError = false;
 
+    private static final Interpreter interpreter = new Interpreter();
+
     public static void main(String[] args) throws IOException {
         if (args.length > 1) {
             System.out.println("Usage: jlox [script]");
@@ -45,38 +47,41 @@ public class Lox {
         if (hadError) {
             System.exit(65);
         }
+        if (hadRuntimeError) {
+            System.exit(70);
+        }
     }
 
     // Handle REPL mode execution of program
     private static void runPrompt() throws IOException {
         // ASCII art logo
         String logo = "\r\n" + //
-                        "                                                                                   \r\n" + //
-                        "                                                                                   \r\n" + //
-                        "          JJJJJJJJJJJ LLLLLLLLLLL                                                  \r\n" + //
-                        "          J:::::::::J L:::::::::L                                                  \r\n" + //
-                        "          J:::::::::J L:::::::::L                                                  \r\n" + //
-                        "          JJ:::::::JJ LL:::::::LL                                                  \r\n" + //
-                        "            J:::::J     L:::::L                   ooooooooooo   xxxxxxx      xxxxxxx\r\n" + //
-                        "            J:::::J     L:::::L                 oo:::::::::::oo  x:::::x    x:::::x \r\n" + //
-                        "            J:::::J     L:::::L                o:::::::::::::::o  x:::::x  x:::::x  \r\n" + //
-                        "            J:::::j     L:::::L                o:::::ooooo:::::o   x:::::xx:::::x   \r\n" + //
-                        "            J:::::J     L:::::L                o::::o     o::::o    x::::::::::x    \r\n" + //
-                        "JJJJJJJ     J:::::J     L:::::L                o::::o     o::::o     x::::::::x     \r\n" + //
-                        "J:::::J     J:::::J     L:::::L                o::::o     o::::o     x::::::::x     \r\n" + //
-                        "J::::::J   J::::::J     L:::::L         LLLLLL o::::o     o::::o    x::::::::::x    \r\n" + //
-                        "J:::::::JJJ:::::::J   LL:::::::LLLLLLLLL:::::L o:::::ooooo:::::o   x:::::xx:::::x   \r\n" + //
-                        " JJ:::::::::::::JJ    L::::::::::::::::::::::L o:::::::::::::::o  x:::::x  x:::::x  \r\n" + //
-                        "   JJ:::::::::JJ      L::::::::::::::::::::::L  oo:::::::::::oo  x:::::x    x:::::x \r\n" + //
-                        "     JJJJJJJJJ        LLLLLLLLLLLLLLLLLLLLLLLL    ooooooooooo   xxxxxxx      xxxxxxx\r\n" + //
-                        "                                                                                  \r\n" + //
-                        "                                                                                  \r\n" + //
-                        "                                                                                  \r\n" + //
-                        "                                                                                  \r\n" + //
-                        "                                                                                  \r\n" + //
-                        "                                                                                  \r\n" + //
-                        "                                                                                  \r\n" + //
-                        "";
+                "                                                                                   \r\n" + //
+                "                                                                                   \r\n" + //
+                "          JJJJJJJJJJJ LLLLLLLLLLL                                                  \r\n" + //
+                "          J:::::::::J L:::::::::L                                                  \r\n" + //
+                "          J:::::::::J L:::::::::L                                                  \r\n" + //
+                "          JJ:::::::JJ LL:::::::LL                                                  \r\n" + //
+                "            J:::::J     L:::::L                   ooooooooooo   xxxxxxx      xxxxxxx\r\n" + //
+                "            J:::::J     L:::::L                 oo:::::::::::oo  x:::::x    x:::::x \r\n" + //
+                "            J:::::J     L:::::L                o:::::::::::::::o  x:::::x  x:::::x  \r\n" + //
+                "            J:::::j     L:::::L                o:::::ooooo:::::o   x:::::xx:::::x   \r\n" + //
+                "            J:::::J     L:::::L                o::::o     o::::o    x::::::::::x    \r\n" + //
+                "JJJJJJJ     J:::::J     L:::::L                o::::o     o::::o     x::::::::x     \r\n" + //
+                "J:::::J     J:::::J     L:::::L                o::::o     o::::o     x::::::::x     \r\n" + //
+                "J::::::J   J::::::J     L:::::L         LLLLLL o::::o     o::::o    x::::::::::x    \r\n" + //
+                "J:::::::JJJ:::::::J   LL:::::::LLLLLLLLL:::::L o:::::ooooo:::::o   x:::::xx:::::x   \r\n" + //
+                " JJ:::::::::::::JJ    L::::::::::::::::::::::L o:::::::::::::::o  x:::::x  x:::::x  \r\n" + //
+                "   JJ:::::::::JJ      L::::::::::::::::::::::L  oo:::::::::::oo  x:::::x    x:::::x \r\n" + //
+                "     JJJJJJJJJ        LLLLLLLLLLLLLLLLLLLLLLLL    ooooooooooo   xxxxxxx      xxxxxxx\r\n" + //
+                "                                                                                  \r\n" + //
+                "                                                                                  \r\n" + //
+                "                                                                                  \r\n" + //
+                "                                                                                  \r\n" + //
+                "                                                                                  \r\n" + //
+                "                                                                                  \r\n" + //
+                "                                                                                  \r\n" + //
+                "";
 
         System.out.println(ANSI_CYAN + logo + ANSI_RESET);
         System.out.println(ANSI_YELLOW + "JLox Interpreter " + ANSI_GREEN + "v" + VERSION + ANSI_RESET);
@@ -116,8 +121,8 @@ public class Lox {
             return;
         }
 
-        // Print the AST for debugging purposes
-        System.out.println(new ASTPrinter().print(expression));
+        // Call the interpreter to evalute expression
+        interpreter.interpret(expression);
     }
 
     // Handle error without token
@@ -129,6 +134,12 @@ public class Lox {
     public static void report(int line, String where, String message) {
         System.err.println("[line " + line + "] Error" + where + ": " + message);
         hadError = true;
+    }
+
+    static void runtimeError(RuntimeError error) {
+        System.err.println(error.getMessage() +
+                "\n[line " + error.token.line + "]");
+        hadRuntimeError = true;
     }
 
     // Handle error with token
