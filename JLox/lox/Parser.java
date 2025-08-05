@@ -1,5 +1,6 @@
 package JLox.lox;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,14 +30,36 @@ public class Parser {
 
     // Parses the tokens and returns the root expression of the AST.
     // If a parsing error occurs, it returns null.
-    public Expr parse() {
-        try {
-            // Start parsing from the top-level expression
-            return expression();
-        } catch (ParseError error) {
-            // If a parsing error occurs, return null
-            return null;
+    public List<Stmt> parse() {
+        List<Stmt> statements = new ArrayList<>();
+        while (!isAtEnd()) {
+            statements.add(statement());
         }
+
+        return statements;
+    }
+
+    // program → statement* EOF 
+    private Stmt statement() {
+        if (match(TokenType.PRINT)) {
+            return printStatement();
+        }
+
+        return expressionStatement();
+    }
+
+    // printStmt → "print" expression ";" 
+    private Stmt printStatement() {
+        Expr value = expression();
+        consume(TokenType.SEMICOLON, "Expect ';' after value.");
+        return new Stmt.Print(value);
+    }
+
+    // expressionStmt → expression ";"
+    private Stmt expressionStatement() {
+        Expr expr = expression();
+        consume(TokenType.SEMICOLON, "Expect ';' after expression.");
+        return new Stmt.Expression(expr);
     }
 
     // expression → equality

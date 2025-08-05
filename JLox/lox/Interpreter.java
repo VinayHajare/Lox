@@ -1,6 +1,11 @@
 package JLox.lox;
 
-class Interpreter implements Expr.Visitor<Object> {
+import java.util.List;
+
+import JLox.lox.Stmt.Expression;
+import JLox.lox.Stmt.Print;
+
+class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Object visitBinaryExpr(Expr.Binary expr) {
@@ -37,8 +42,17 @@ class Interpreter implements Expr.Visitor<Object> {
                 if (left instanceof String && right instanceof String) {
                     return (String) left + (String) right;
                 }
+
+                if (left instanceof String && right instanceof Double) {
+                    return (String) left + stringify(right);
+                }
+
                 throw new RuntimeError(expr.operator, "Operands must be two numbers or two strings.");
             case TokenType.SLASH:
+                checkNumberOperands(expr.operator, left, right);
+                if ((double) right == 0.0) {
+                    throw new RuntimeError(expr.operator, "Division by zero.");
+                }
                 return (double) left / (double) right;
             case TokenType.STAR:
                 return (double) left * (double) right;
@@ -74,8 +88,25 @@ class Interpreter implements Expr.Visitor<Object> {
         return null;
     }
 
+    @Override
+    public Void visitExpressionStmt(Stmt.Expression stmt) {
+        evaluate(stmt.expression);
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStmt(Print stmt) {
+        Object value = evaluate(stmt.expression);
+        System.out.println(stringify(value));
+        return null;
+    }
+
     private Object evaluate(Expr expr) {
         return expr.accept(this);
+    }
+
+    private void execute(Stmt stmt) {
+        stmt.accept(this);
     }
 
     private boolean isTruthy(Object object) {
@@ -123,7 +154,7 @@ class Interpreter implements Expr.Visitor<Object> {
             return "null";
         }
 
-        if(object instanceof Double) {
+        if (object instanceof Double) {
             String text = object.toString();
 
             if (text.endsWith(".0")) {
@@ -135,10 +166,11 @@ class Interpreter implements Expr.Visitor<Object> {
         return object.toString();
     }
 
-    void interpret(Expr expression) {
+    void interpret(List<Stmt> statements) {
         try {
-            Object value = evaluate(expression);
-            System.out.println(stringify(value));
+            for (Stmt statement : statements) {
+                execute(statement);
+            }
         } catch (RuntimeError error) {
             Lox.runtimeError(error);
         }

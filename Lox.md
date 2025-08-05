@@ -26,7 +26,7 @@ We have put `print` as a built in operator rather than a library function.
 In Lox's world there are only few built-in data types -
 
 1. **Booleans**  
-   Lox has Dedicated _Boolean_ type. "True" and "false" are yin and yang of software. There are two Boolean values, obviously:
+   Lox has Dedicated _Boolean_ type. "true" and "false" are yin and yang of software. There are two Boolean values, obviously:
    ```Java
    true; // Not false
    false; // Not *not* false
@@ -432,7 +432,10 @@ Precedence rules are same as **C/Java**, going from *lowest* to *highest*:
  
 
 ## Grammar of Lox 🆎  
-
+**program** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;statement* EOF ;  
+**statement**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;exprStmt | printStmt ;  
+**exprStmt** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;expression ";" ;  
+**printStmt**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"print" expression ";" ;  
 **expression** &nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; equality ;  
 **equality** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; comparison ( ( "!=" | "==" ) comparison )* ;  
 **comparison** &nbsp;&nbsp;→&nbsp; term ( ( ">" | ">=" | "<" | "<=" ) term )* ;  

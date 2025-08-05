@@ -25,6 +25,11 @@ public class GenerateAST {
                 "Grouping : Expr expression",
                 "Literal  : Object value",
                 "Unary    : Token operator, Expr right"));
+        
+        defineAst(outDir, "Stmt", Arrays.asList(
+                "Expression : Expr expression",
+                "Print      : Expr expression"
+        ));
     }
 
     // Generate the Base class and recursively generate the subclasses specified in

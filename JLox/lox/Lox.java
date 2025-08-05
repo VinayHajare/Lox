@@ -114,7 +114,7 @@ public class Lox {
         List<Token> tokens = scanner.scanTokens();
 
         Parser parser = new Parser(tokens);
-        Expr expression = parser.parse();
+        List<Stmt> statements = parser.parse();
 
         // If there was a parsing error, exit early
         if (hadError) {
@@ -122,7 +122,7 @@ public class Lox {
         }
 
         // Call the interpreter to evalute expression
-        interpreter.interpret(expression);
+        interpreter.interpret(statements);
     }
 
     // Handle error without token
