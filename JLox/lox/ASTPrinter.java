@@ -1,5 +1,8 @@
 package JLox.lox;
 
+import JLox.lox.Expr.Assign;
+import JLox.lox.Expr.Variable;
+
 /**
  * A pretty printer to print string representation of given AST Node.
  * It doen't print the Lox source program of given AST but its equivalent code
@@ -41,6 +44,16 @@ public class ASTPrinter implements Expr.Visitor<String> {
     @Override
     public String visitUnaryExpr(Expr.Unary expr) {
         return parenthesize(expr.operator.lexeme, expr.right);
+    }
+
+    @Override
+    public String visitVariableExpr(Variable expr) {
+        return expr.name.lexeme;
+    }
+
+    @Override
+    public String visitAssignExpr(Assign expr) {
+        return parenthesize("assign " + expr.name.lexeme, expr.value);
     }
 
     // Recusrssively convert expr to the LISP-like string

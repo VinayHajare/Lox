@@ -432,17 +432,21 @@ Precedence rules are same as **C/Java**, going from *lowest* to *highest*:
  
 
 ## Grammar of Lox 🆎  
-**program** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;statement* EOF ;  
-**statement**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;exprStmt | printStmt ;  
+**program** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;declaration* EOF ;  
+**declaration**&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;varDecl | statement ;  
+**varDecl**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"var" IDENTIFIER ( "=" expression )? ";" ;
+**statement**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;exprStmt | printStmt | block;  
+**block**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"{" declaration* "}" ;  
 **exprStmt** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;expression ";" ;  
 **printStmt**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"print" expression ";" ;  
-**expression** &nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; equality ;  
+**expression** &nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; assignment ;  
+**assignment**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;IDENTIFIER "=" assignment | equality ;
 **equality** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; comparison ( ( "!=" | "==" ) comparison )* ;  
 **comparison** &nbsp;&nbsp;→&nbsp; term ( ( ">" | ">=" | "<" | "<=" ) term )* ;  
 **term** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; factor ( ( "-" | "+" ) factor )* ;  
 **factor** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; unary ( ( "/" | "*" ) unary )* ;  
 **unary** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; ( "!" | "-" ) unary | primary ;  
-**primary** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" ;  
+**primary** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" | IDENTIFIER ;  
 
 
 We are going to use **Recursive Descent** parser, which is top-down type of parser. They are simple, fast, robust, and can support sophisticated error handling. In a top-down parser, you reach the lowest-precedence expressions first because they may in turn contain subexpressions of higher precedence. It starts from the top or outermost grammar rule (here expression) and works its way down into the nested subexpressions before finally reaching the leaves of the syntax tree.

@@ -28,27 +28,68 @@ public class Parser {
         this.tokens = tokens;
     }
 
-    // Parses the tokens and returns the root expression of the AST.
+    // Parses the tokens and returns the root statement of the AST.
     // If a parsing error occurs, it returns null.
+
+    // program → declaration* EOF
     public List<Stmt> parse() {
         List<Stmt> statements = new ArrayList<>();
         while (!isAtEnd()) {
-            statements.add(statement());
+            statements.add(declaration());
         }
 
         return statements;
     }
 
-    // program → statement* EOF 
-    private Stmt statement() {
-        if (match(TokenType.PRINT)) {
-            return printStatement();
+    // declaration → varDecl | statement
+    private Stmt declaration() {
+        try {
+            if (match(TokenType.VAR)) {
+                return varDeclaration();
+            }
+            return statement();
+        } catch (ParseError e) {
+            synchronize();
+            return null;
         }
+    }
+
+    // varDecl → "var" IDENTIFIER ( "=" expression )? ";"
+    private Stmt varDeclaration() {
+        Token name = consume(TokenType.IDENTIFIER, "Expect variable name.");
+
+        Expr initializer = null;
+        if (match(TokenType.EQUAL)) {
+            initializer = expression();
+        }
+
+        consume(TokenType.SEMICOLON, "Expect ';' after variable declaration.");
+        return new Stmt.Var(name, initializer);
+    }
+
+    // statement → exprStmt | printStmt | block
+    private Stmt statement() {
+        if (match(TokenType.PRINT))
+            return printStatement();
+        if (match(TokenType.LEFT_BRACE))
+            return new Stmt.Block(block());
 
         return expressionStatement();
     }
 
-    // printStmt → "print" expression ";" 
+    // block → "{" declaration* "}"
+    private List<Stmt> block() {
+        List<Stmt> statements = new ArrayList<>();
+
+        while (!check(TokenType.RIGHT_BRACE) && !isAtEnd()) {
+            statements.add(declaration());
+        }
+
+        consume(TokenType.RIGHT_BRACE, "Expect '}' after block.");
+        return statements;
+    }
+
+    // printStmt → "print" expression ";"
     private Stmt printStatement() {
         Expr value = expression();
         consume(TokenType.SEMICOLON, "Expect ';' after value.");
@@ -62,9 +103,28 @@ public class Parser {
         return new Stmt.Expression(expr);
     }
 
-    // expression → equality
+    // expression → assignment
     private Expr expression() {
-        return equality();
+        return assignment();
+    }
+
+    // assignment → IDENTIFIER "=" expression | equality
+    private Expr assignment() {
+        Expr expr = equality();
+
+        if (match(TokenType.EQUAL)) {
+            Token equals = previous();
+            Expr values = assignment();
+
+            if (expr instanceof Expr.Variable) {
+                Token name = ((Expr.Variable) expr).name;
+                return new Expr.Assign(name, values);
+            }
+
+            error(equals, "Invalid assignment target.");
+        }
+
+        return expr;
     }
 
     // equality → comparison ( ( "!=" | "==" ) comparison )* ;
@@ -130,7 +190,8 @@ public class Parser {
         return primary();
     }
 
-    // primary → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" ;
+    // primary → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" |
+    // IDENTIFIER;
     private Expr primary() {
         if (match(TokenType.FALSE))
             return new Expr.Literal(false);
@@ -141,6 +202,10 @@ public class Parser {
 
         if (match(TokenType.STRING, TokenType.NUMBER)) {
             return new Expr.Literal(previous().literal);
+        }
+
+        if (match(TokenType.IDENTIFIER)) {
+            return new Expr.Variable(previous());
         }
 
         if (match(TokenType.LEFT_PAREN)) {
@@ -217,6 +282,7 @@ public class Parser {
     // Synchronizes the parser to recover from errors.
     // It skips tokens until it finds a statement boundary or a known keyword which
     // is start of a statement.
+    @SuppressWarnings("incomplete-switch")
     private void synchronize() {
         advance();
 
