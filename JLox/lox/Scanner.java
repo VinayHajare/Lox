@@ -81,10 +81,10 @@ public class Scanner {
                 addToken(match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL);
                 break;
             case '<':
-                addToken(match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER);
+                addToken(match('=') ? TokenType.LESS_EQUAL : TokenType.LESS);
                 break;
             case '>':
-                addToken(match('=') ? TokenType.LESS_EQUAL : TokenType.LESS);
+                addToken(match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER);
                 break;            
             case '/': 
                 if (match('/')) {

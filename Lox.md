@@ -434,13 +434,18 @@ Precedence rules are same as **C/Java**, going from *lowest* to *highest*:
 ## Grammar of Lox 🆎  
 **program** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;declaration* EOF ;  
 **declaration**&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;varDecl | statement ;  
-**varDecl**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"var" IDENTIFIER ( "=" expression )? ";" ;
-**statement**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;exprStmt | printStmt | block;  
+**varDecl**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"var" IDENTIFIER ( "=" expression )? ";" ;  
+**statement**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;exprStmt | forStmt | ifStmt | whileStmt | printStmt | block;  
 **block**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"{" declaration* "}" ;  
-**exprStmt** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;expression ";" ;  
+**exprStmt**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;expression ";" ;  
+**forStmt**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"for" "(" ( varDecl | exprStmt | ";" )    expression? ";" expression? ")" statement ;
+**ifStmt**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"if" "(" expression ")" statement ( "else" statement )? ;  
+**whileStmt**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"while" "(" expression ")" statement ;  
 **printStmt**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"print" expression ";" ;  
 **expression** &nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; assignment ;  
-**assignment**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;IDENTIFIER "=" assignment | equality ;
+**assignment**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;IDENTIFIER "=" assignment | logic_or ;  
+**logic_or**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;logic_and ( "or" logic_and )* ;  
+**logic_and**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;equality ( "and" equality )* ;  
 **equality** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; comparison ( ( "!=" | "==" ) comparison )* ;  
 **comparison** &nbsp;&nbsp;→&nbsp; term ( ( ">" | ">=" | "<" | "<=" ) term )* ;  
 **term** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; factor ( ( "-" | "+" ) factor )* ;  

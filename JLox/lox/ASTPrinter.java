@@ -1,6 +1,7 @@
 package JLox.lox;
 
 import JLox.lox.Expr.Assign;
+import JLox.lox.Expr.Logical;
 import JLox.lox.Expr.Variable;
 
 /**
@@ -56,6 +57,12 @@ public class ASTPrinter implements Expr.Visitor<String> {
         return parenthesize("assign " + expr.name.lexeme, expr.value);
     }
 
+    @Override
+    public String visitLogicalExpr(Logical expr) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visitLogicalExpr'");
+    }
+
     // Recusrssively convert expr to the LISP-like string
     private String parenthesize(String name, Expr... exprs) {
         StringBuilder builder = new StringBuilder();
@@ -83,4 +90,5 @@ public class ASTPrinter implements Expr.Visitor<String> {
         );
         System.out.println(new ASTPrinter().print(expression));
     }
+
 }
