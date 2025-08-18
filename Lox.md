@@ -213,9 +213,9 @@ If execution reaches end of the block without hiting a `return`, it implicitly r
 
 ## Closures
 
-Functions are _first class_ in Lox, which means they are real values that you can reference to, store in variables, pass arounf, etc. Like:
+Functions are _first class_ in Lox, which means they are real values that you can reference to, store in variables, pass around, etc. Like:
 
-```Java
+```rust
 fun addPair(a, b) {
     return a + b;
 }
@@ -433,15 +433,19 @@ Precedence rules are same as **C/Java**, going from *lowest* to *highest*:
 
 ## Grammar of Lox 🆎  
 **program** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;declaration* EOF ;  
-**declaration**&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;varDecl | statement ;  
+**declaration**&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;funDecl | varDecl | statement ;  
 **varDecl**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"var" IDENTIFIER ( "=" expression )? ";" ;  
-**statement**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;exprStmt | forStmt | ifStmt | whileStmt | printStmt | block;  
+**funDecl** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"fun" function ;  
+**function** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;IDENTIFIER "(" parameters? ")" block ;  
+**parameters** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;IDENTIFIER ( "," IDENTIFIER )* ;  
+**statement**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;exprStmt | forStmt | ifStmt | whileStmt | returnStmt | printStmt | block;  
 **block**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"{" declaration* "}" ;  
 **exprStmt**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;expression ";" ;  
 **forStmt**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"for" "(" ( varDecl | exprStmt | ";" )    expression? ";" expression? ")" statement ;
 **ifStmt**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"if" "(" expression ")" statement ( "else" statement )? ;  
 **whileStmt**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"while" "(" expression ")" statement ;  
 **printStmt**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"print" expression ";" ;  
+**returnStmt**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"return" expression? ";" ;  
 **expression** &nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; assignment ;  
 **assignment**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;IDENTIFIER "=" assignment | logic_or ;  
 **logic_or**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;logic_and ( "or" logic_and )* ;  
@@ -450,7 +454,9 @@ Precedence rules are same as **C/Java**, going from *lowest* to *highest*:
 **comparison** &nbsp;&nbsp;→&nbsp; term ( ( ">" | ">=" | "<" | "<=" ) term )* ;  
 **term** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; factor ( ( "-" | "+" ) factor )* ;  
 **factor** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; unary ( ( "/" | "*" ) unary )* ;  
-**unary** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; ( "!" | "-" ) unary | primary ;  
+**unary** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; ( "!" | "-" ) unary | call ;  
+**call** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; primary ( "(" arguments? ")" )* ;  
+**arguments** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; expression ( "," expression )* ;  
 **primary** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" | IDENTIFIER ;  
 
 

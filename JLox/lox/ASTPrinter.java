@@ -1,6 +1,7 @@
 package JLox.lox;
 
 import JLox.lox.Expr.Assign;
+import JLox.lox.Expr.Call;
 import JLox.lox.Expr.Logical;
 import JLox.lox.Expr.Variable;
 
@@ -59,8 +60,18 @@ public class ASTPrinter implements Expr.Visitor<String> {
 
     @Override
     public String visitLogicalExpr(Logical expr) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visitLogicalExpr'");
+        return parenthesize(expr.operator.lexeme, expr.left, expr.right);
+    }
+
+    @Override
+    public String visitCallExpr(Call expr) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(parenthesize(expr.callee.accept(this)));
+        for (Expr argument : expr.arguments) {
+            builder.append(" ");
+            builder.append(argument.accept(this));
+        }
+        return builder.toString();
     }
 
     // Recusrssively convert expr to the LISP-like string
