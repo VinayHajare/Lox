@@ -257,15 +257,23 @@ public class Lox {
     private static void run(String source) {
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.scanTokens();
-        
+
         Parser parser = new Parser(tokens);
         List<Stmt> statements = parser.parse();
-        
+
         // If there was a parsing error, exit early
         if (hadError) {
             return;
         }
 
+        Resolver resolver = new Resolver(interpreter);
+        resolver.resolve(statements);
+
+        // Stop if there was a resolution error.
+        if (hadError) {
+            return;
+        }
+        
         // Call the interpreter to evalute expression
         interpreter.interpret(statements);
     }
