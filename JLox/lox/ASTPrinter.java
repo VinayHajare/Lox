@@ -2,7 +2,10 @@ package JLox.lox;
 
 import JLox.lox.Expr.Assign;
 import JLox.lox.Expr.Call;
+import JLox.lox.Expr.Get;
 import JLox.lox.Expr.Logical;
+import JLox.lox.Expr.Set;
+import JLox.lox.Expr.This;
 import JLox.lox.Expr.Variable;
 
 /**
@@ -72,6 +75,21 @@ public class ASTPrinter implements Expr.Visitor<String> {
             builder.append(argument.accept(this));
         }
         return builder.toString();
+    }
+
+    @Override
+    public String visitGetExpr(Get expr) {
+        throw new UnsupportedOperationException("Unimplemented method 'visitGetExpr'");
+    }
+
+    @Override
+    public String visitSetExpr(Set expr) {
+        throw new UnsupportedOperationException("Unimplemented method 'visitSetExpr'");
+    }
+
+    @Override
+    public String visitThisExpr(This expr) {
+        throw new UnsupportedOperationException("Unimplemented method 'visitThisExpr'");
     }
 
     // Recusrssively convert expr to the LISP-like string

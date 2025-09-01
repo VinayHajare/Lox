@@ -433,7 +433,8 @@ Precedence rules are same as **C/Java**, going from *lowest* to *highest*:
 
 ## Grammar of Lox 🆎  
 **program** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;declaration* EOF ;  
-**declaration**&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;funDecl | varDecl | statement ;  
+**declaration**&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; classDecl | funDecl | varDecl | statement ;  
+**classDecl**&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"class" IDENTIFIER "{" function* "}";  
 **varDecl**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"var" IDENTIFIER ( "=" expression )? ";" ;  
 **funDecl** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"fun" function ;  
 **function** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;IDENTIFIER "(" parameters? ")" block ;  
@@ -455,7 +456,7 @@ Precedence rules are same as **C/Java**, going from *lowest* to *highest*:
 **term** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; factor ( ( "-" | "+" ) factor )* ;  
 **factor** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; unary ( ( "/" | "*" ) unary )* ;  
 **unary** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; ( "!" | "-" ) unary | call ;  
-**call** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; primary ( "(" arguments? ")" )* ;  
+**call** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; primary ( "(" arguments? ")" | "." IDENTIFIER )* ;  
 **arguments** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; expression ( "," expression )* ;  
 **primary** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" | IDENTIFIER ;  
 
