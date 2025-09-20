@@ -5,6 +5,7 @@ import JLox.lox.Expr.Call;
 import JLox.lox.Expr.Get;
 import JLox.lox.Expr.Logical;
 import JLox.lox.Expr.Set;
+import JLox.lox.Expr.Super;
 import JLox.lox.Expr.This;
 import JLox.lox.Expr.Variable;
 
@@ -118,6 +119,11 @@ public class ASTPrinter implements Expr.Visitor<String> {
                         )
         );
         System.out.println(new ASTPrinter().print(expression));
+    }
+
+    @Override
+    public String visitSuperExpr(Super expr) {
+        throw new UnsupportedOperationException("Unimplemented method 'visitSuperExpr'");
     }
 
 }

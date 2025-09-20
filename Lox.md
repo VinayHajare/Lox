@@ -434,8 +434,8 @@ Precedence rules are same as **C/Java**, going from *lowest* to *highest*:
 ## Grammar of Lox 🆎  
 **program** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;declaration* EOF ;  
 **declaration**&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; classDecl | funDecl | varDecl | statement ;  
-**classDecl**&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"class" IDENTIFIER "{" function* "}";  
-**varDecl**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"var" IDENTIFIER ( "=" expression )? ";" ;  
+**classDecl**&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"class" IDENTIFIER ( "<" IDENTIFIER )?"{" function* "}";  
+**varDecl**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"var" IDENTIFIER ( "=" expression )? ";";  
 **funDecl** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"fun" function ;  
 **function** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;IDENTIFIER "(" parameters? ")" block ;  
 **parameters** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;IDENTIFIER ( "," IDENTIFIER )* ;  
@@ -458,7 +458,7 @@ Precedence rules are same as **C/Java**, going from *lowest* to *highest*:
 **unary** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; ( "!" | "-" ) unary | call ;  
 **call** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; primary ( "(" arguments? ")" | "." IDENTIFIER )* ;  
 **arguments** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; expression ( "," expression )* ;  
-**primary** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" | IDENTIFIER ;  
+**primary** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; "true" | "false" | "nil" | this" | NUMBER | STRING | IDENTIFIER | "(" expression ")" | "super" "." IDENTIFIER ;  
 
 
 We are going to use **Recursive Descent** parser, which is top-down type of parser. They are simple, fast, robust, and can support sophisticated error handling. In a top-down parser, you reach the lowest-precedence expressions first because they may in turn contain subexpressions of higher precedence. It starts from the top or outermost grammar rule (here expression) and works its way down into the nested subexpressions before finally reaching the leaves of the syntax tree.
