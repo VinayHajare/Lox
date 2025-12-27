@@ -442,7 +442,7 @@ Precedence rules are same as **C/Java**, going from *lowest* to *highest*:
 **statement**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;exprStmt | forStmt | ifStmt | whileStmt | returnStmt | printStmt | block;  
 **block**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"{" declaration* "}" ;  
 **exprStmt**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;expression ";" ;  
-**forStmt**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"for" "(" ( varDecl | exprStmt | ";" )    expression? ";" expression? ")" statement ;
+**forStmt**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"for" "(" ( varDecl | exprStmt | ";" )    expression? ";" expression? ")" statement ;  
 **ifStmt**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"if" "(" expression ")" statement ( "else" statement )? ;  
 **whileStmt**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"while" "(" expression ")" statement ;  
 **printStmt**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp;"print" expression ";" ;  

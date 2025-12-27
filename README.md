@@ -26,15 +26,20 @@ Lox/
 ### CLox
 
 ```bash
-cd CLox
-make
-./clox path/to/file.lox
+# Build CLox
+make clox
+
+# Run a source file
+./build/clox path/to/file.lox
+
+# Run REPL mode
+./build/clox
 ````
 
 ### JLox
 
 ```bash
-# Build Jlox
+# Build JLox
 make jlox
 
 # Run REPL mode
