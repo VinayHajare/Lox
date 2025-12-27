@@ -34,6 +34,9 @@ make clox
 
 # Run REPL mode
 ./build/clox
+
+# Test CLox against test-suite
+./test-runner/target/release/test-runner.exe clox 
 ````
 
 ### JLox
@@ -47,6 +50,9 @@ make repl
 
 # Run a source file
 make run FILE=path/to/file
+
+# Test JLox against test-suite
+test-runner\target\release\test-runner.exe jlox
 ```
 
 ## 📖 More Details

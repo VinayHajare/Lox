@@ -23,5 +23,19 @@
 hs_err_pid*
 replay_pid*
 
-# C executable
-*.exe
+# Build directory - Lox interpreter build output
+/build/
+
+# Rust build artifacts - only ignore debug, keep release for distribution
+test-runner/target/debug/
+test-runner/target/debug/*
+
+# Keep these files in target/release for distribution
+!test-runner/target/release/
+!test-runner/target/release/*/
+!test-runner/target/release/*.exe
+!test-runner/target/release/*.dll
+!test-runner/target/release/*.so
+!test-runner/target/release/*.dylib
+!test-runner/target/release/*.pdb
+!test-runner/target/release/*.d
