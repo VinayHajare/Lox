@@ -1,0 +1,9 @@
+[package]
+name = "test-runner"
+version = "0.1.0"
+edition = "2024"
+description = "Test runner for clox and jlox interpreters"
+
+[dependencies]
+glob = "0.3.3"
+regex = "1.12.2"
