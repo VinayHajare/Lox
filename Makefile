@@ -12,7 +12,8 @@ OUTDIR ?= JLox/lox
 FILE ?= test/test.lox
 
 # CLox settings
-CLOX_SRC_DIR = CLox
+CLOX_SRC_DIR = CLox/src
+CLOX_INCLUDE_DIR = CLox
 CLOX_BUILD_DIR = $(JLOX_BUILD_DIR)
 CLOX_BINARY = $(CLOX_BUILD_DIR)/clox
 
@@ -32,7 +33,7 @@ jlox:
 
 clox:
 	@if not exist "$(CLOX_BUILD_DIR)" mkdir "$(CLOX_BUILD_DIR)"
-	@gcc -o "$(CLOX_BINARY)" $(wildcard $(CLOX_SRC_DIR)/*.c) -I"$(CLOX_SRC_DIR)"
+	@gcc -o "$(CLOX_BINARY)" $(wildcard $(CLOX_SRC_DIR)/*.c) -I"$(CLOX_INCLUDE_DIR)"
 	@echo CLox build complete.
 
 run:

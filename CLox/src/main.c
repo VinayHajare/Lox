@@ -1,6 +1,6 @@
-#include "common.h"
-#include "chunk.h"
-#include "debug.h"
+#include "include/common.h"
+#include "include/chunk.h"
+#include "include/debug.h"
 
 int main(int argc, char const *argv[])
 {
