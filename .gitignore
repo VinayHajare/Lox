@@ -26,8 +26,9 @@ replay_pid*
 # Build directory - Lox interpreter build output
 /build/
 
-# Rust build artifacts - only ignore debug, keep release for distribution
+# Ignore everything in the test-runner/target directory
 /test-runner/target/
 
-# Keep these files in target/release for distribution
-!/test-runner/target/release/test-runner.exe
+# But do not ignore the release .exe files in test-runner/target/release
+!/test-runner/target/release/
+!/test-runner/target/release/*.exe
