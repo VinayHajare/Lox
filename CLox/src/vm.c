@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "include/common.h"
 #include "include/vm.h"
+#include "include/compiler.h"
 #include "include/debug.h"
 
 VM vm;
@@ -19,15 +20,16 @@ void freeVM()
 {
 }
 
-static InterpreterResult run()
+static InterpretResult run()
 {
 #define READ_BYTE() (*vm.ip++)
 #define READ_CONSTANT() (vm.chunk->constants.values[READ_BYTE()])
-#define BINARY_OP(op) \
-    do { \
+#define BINARY_OP(op)     \
+    do                    \
+    {                     \
         double b = pop(); \
         double a = pop(); \
-        push(a op b); \
+        push(a op b);     \
     } while (false)
 #define READ_24BIT_INDEX() \
     (READ_BYTE() | (READ_BYTE() << 8) | (READ_BYTE() << 16))
@@ -103,11 +105,10 @@ static InterpreterResult run()
 #undef BINARY_OP
 }
 
-InterpreterResult interpret(Chunk *chunk)
+InterpretResult interpret(const char *source)
 {
-    vm.chunk = chunk;
-    vm.ip = vm.chunk->code;
-    return run();
+    compile(source);
+    return INTERPRET_OK;
 }
 
 void push(Value value)

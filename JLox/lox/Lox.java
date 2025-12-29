@@ -31,7 +31,7 @@ public class Lox {
     public static void main(String[] args) throws IOException {
         System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
         if (args.length > 1) {
-            System.out.println("Usage: jlox [script]");
+            System.out.println("Usage: jlox [path/to/script]");
             System.exit(64);
         } else if (args.length == 1) {
             runFile(args[0]);
