@@ -13,9 +13,11 @@ The goal of this project is to gain a deep understanding of interpreter design b
 ```
 
 Lox/
-├── CLox/       # Lox implemented in C (bytecode VM)
-├── JLox/       # Lox implemented in Java (tree-walk)
-└── Lox.md      # Detailed language description and design notes
+├── CLox/               # Lox implemented in C (bytecode VM)
+├── JLox/               # Lox implemented in Java (tree-walk)
+├── test/               # Lox test suite
+├── test-runner/        # Fast Rust test suite runner & benchmark script
+└── Lox.md              # Detailed language description and design notes
 
 ````
 *Note: Make sure you are in Lox directory before running below commands.*
@@ -52,7 +54,24 @@ make repl
 make run FILE=path/to/file
 
 # Test JLox against test-suite
-test-runner\target\release\test-runner.exe jlox
+test-runner/target/release/test-runner.exe jlox
+```
+
+## 📊 Benchmarks  
+
+Benchmark JLox and CLox interpreter:
+```bash
+# List all available benchmarks
+test-runner/target/release/benchmark.exe --list  
+
+# Run benchmark against JLox
+test-runner/target/release/benchmark.exe jlox  
+
+# Run benchmark against CLox
+test-runner/target/release/benchmark.exe clox  
+
+# Run benchmark for CLox and JLox (comparison mode)
+test-runner/target/release/benchmark.exe clox jlox
 ```
 
 ## 📖 More Details

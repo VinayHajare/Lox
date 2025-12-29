@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "include/chunk.h"
 #include "include/memory.h"
 
@@ -68,10 +69,10 @@ void writeConstant(Chunk *chunk, Value value, int line)
     }
     else
     {
-        writeChunk(chunk, OP_CONSTANT, line);
-        writeChunk(chunk, (uint8_t) (index & 0xFF), line);
-        writeChunk(chunk, (uint8_t) ((index >> 8) & 0xFF), line);
-        writeChunk(chunk, (uint8_t) ((index >> 16) & 0xFF), line);
+        writeChunk(chunk, OP_CONSTANT_LONG, line);
+        writeChunk(chunk, (uint8_t)(index & 0xff), line);
+        writeChunk(chunk, (uint8_t)((index >> 8) & 0xff), line);
+        writeChunk(chunk, (uint8_t)((index >> 16) & 0xff), line);
     }
 }
 

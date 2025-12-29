@@ -30,5 +30,5 @@ replay_pid*
 /test-runner/target/
 
 # But do not ignore the release .exe files in test-runner/target/release
-!/test-runner/target/release/
-!/test-runner/target/release/*.exe
+!test-runner/target/release/test-runner.exe
+!test-runner/target/release/benchmark.exe
