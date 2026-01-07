@@ -9,14 +9,20 @@
 static void repl()
 {
     char line[1024];
-
     for (;;)
     {
         printf("> ");
+
         if (!fgets(line, sizeof(line), stdin))
         {
             printf("\n");
             break;
+        }
+        
+        // Add a newline at the end if not present to ensure proper parsing
+        size_t length = strlen(line);
+        if (length > 0 && line[length-1] == '\n') {
+            line[length-1] = '\0'; // Remove newline
         }
 
         interpret(line);

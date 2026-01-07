@@ -108,7 +108,7 @@ static void skipWhiteSpace()
             break;
 
         case '/':
-            if (peekNext() != '/')
+            if (peekNext() == '/')
             {
                 // A comment goes until the end of the line.
                 while (peek() != '\n' && !isAtEnd())

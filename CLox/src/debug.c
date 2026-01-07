@@ -27,7 +27,6 @@ static int constantInstruction(const char *name, Chunk *chunk, int offset)
     return offset + 2;
 }
 
-// debug.c
 static int longConstantInstruction(const char *name, Chunk *chunk, int offset)
 {
     uint32_t constant = chunk->code[offset + 1] |
