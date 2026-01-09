@@ -156,6 +156,21 @@ static void emitConstant(Value value)
     writeConstant(currentChunk(), value, parser.previous.line);
 }
 
+static void writeGlobalOpcode(uint8_t shortOp, uint8_t longOp, int index, int line)
+{
+    if (index < 256)
+    {
+        emitBytes(shortOp, (uint8_t)index);
+    }
+    else
+    {
+        emitByte(longOp);
+        emitByte((uint8_t)(index & 0xff));
+        emitByte((uint8_t)((index >> 8) & 0xff));
+        emitByte((uint8_t)((index >> 16) & 0xff));
+    }
+}
+
 static void endCompiler()
 {
     emitReturn();
@@ -173,21 +188,21 @@ static void declaration();
 static ParseRule *getRule(TokenType type);
 static void parsePrecedence(Precedence precedence);
 
-static uint8_t identifierConstant(Token *name)
+static int identifierConstant(Token *name)
 {
-    return makeConstant(OBJ_VAL(copyString(name->start,
+    return addConstant(currentChunk(), OBJ_VAL(copyString(name->start,
                                            name->length)));
 }
 
-static uint8_t parseVariable(const char *errorMessage)
+static int parseVariable(const char *errorMessage)
 {
     consume(TOKEN_IDENTIFIER, errorMessage);
     return identifierConstant(&parser.previous);
 }
 
-static void defineVariable(uint8_t global)
+static void defineVariable(int global)
 {
-    emitBytes(OP_DEFINE_GLOBAL, global);
+    writeGlobalOpcode(OP_DEFINE_GLOBAL, OP_DEFINE_GLOBAL_LONG, global, parser.previous.line);
 }
 
 static void binary(bool canAssign)
@@ -270,15 +285,15 @@ static void string(bool canAssign)
 
 static void namedVariable(Token name, bool canAssign)
 {
-    uint8_t arg = identifierConstant(&name);
+    int arg = identifierConstant(&name);
     if (canAssign && match(TOKEN_EQUAL))
     {
         expression();
-        emitBytes(OP_SET_GLOBAL, arg);
+        writeGlobalOpcode(OP_SET_GLOBAL, OP_SET_GLOBAL_LONG, arg, parser.previous.line);
     }
     else
     {
-        emitBytes(OP_GET_GLOBAL, arg);
+        writeGlobalOpcode(OP_GET_GLOBAL, OP_GET_GLOBAL_LONG, arg, parser.previous.line);
     }
 }
 
@@ -389,7 +404,7 @@ static void expression()
 
 static void varDeclaration()
 {
-    uint8_t global = parseVariable("Expect variable name.");
+    int global = parseVariable("Expect variable name.");
 
     if (match(TOKEN_EQUAL))
     {

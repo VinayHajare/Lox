@@ -38,6 +38,26 @@ static int longConstantInstruction(const char *name, Chunk *chunk, int offset)
     return offset + 4;
 }
 
+static int globalInstruction(const char *name, Chunk *chunk, int offset)
+{
+    uint8_t global = chunk->code[offset + 1];
+    printf("%-16s %4d '", name, global);
+    printValue(chunk->constants.values[global]);
+    printf("'\n");
+    return offset + 2;
+}
+
+static int longGlobalInstruction(const char *name, Chunk *chunk, int offset)
+{
+    uint32_t global = chunk->code[offset + 1] |
+                      (chunk->code[offset + 2] << 8) |
+                      (chunk->code[offset + 3] << 16);
+    printf("%-16s %4d '", name, global);
+    printValue(chunk->constants.values[global]);
+    printf("'\n");
+    return offset + 4;
+}
+
 int disassembleInstruction(Chunk *chunk, int offset)
 {
     printf("%04d ", offset);
@@ -67,11 +87,17 @@ int disassembleInstruction(Chunk *chunk, int offset)
     case OP_POP:
         return simpleInstruction("OP_POP", offset);
     case OP_GET_GLOBAL:
-        return constantInstruction("OP_GET_GLOBAL", chunk, offset);
+        return globalInstruction("OP_GET_GLOBAL", chunk, offset);
+    case OP_GET_GLOBAL_LONG:
+        return longGlobalInstruction("OP_GET_GLOBAL_LONG", chunk, offset);
     case OP_DEFINE_GLOBAL:
-        return constantInstruction("OP_DEFINE_GLOBAL", chunk, offset);
+        return globalInstruction("OP_DEFINE_GLOBAL", chunk, offset);
+    case OP_DEFINE_GLOBAL_LONG:
+        return longGlobalInstruction("OP_DEFINE_GLOBAL_LONG", chunk, offset);
     case OP_SET_GLOBAL:
-        return constantInstruction("OP_SET_GLOBAL", chunk, offset);
+        return globalInstruction("OP_SET_GLOBAL", chunk, offset);
+    case OP_SET_GLOBAL_LONG:
+        return longGlobalInstruction("OP_SET_GLOBAL_LONG", chunk, offset);
     case OP_EQUAL:
         return simpleInstruction("OP_EQUAL", offset);
     case OP_GREATER:
