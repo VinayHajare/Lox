@@ -1,27 +1,8 @@
-// A Lox program to test for loop, if-else, and while loop
-
-// Using a for loop to print numbers from 1 to 5
-print "For Loop Test";
-for (var i = 1; i <= 5; i = i + 1) {
-    print i;
+fun fib(n) {
+  if (n < 2) return n;
+  return fib(n - 2) + fib(n - 1);
 }
 
-print "If-Else Test";
-var number = 4;
-print number;
-if (number == 0) {
-    print "Number is zero";
-} else {
-    print "Number is non-zero";
-}
-
-// Using a while loop to calculate the factorial of a number
-print "While Loop Test";
-var n = 5;
-var factorial = 1;
-while (n > 0) {
-    factorial = factorial * n;
-    n = n - 1;
-}
-print "Factorial: ";
-print  factorial;
+var start = clock();
+print fib(35);
+print clock() - start;
