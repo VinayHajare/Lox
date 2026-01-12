@@ -170,6 +170,27 @@ int disassembleInstruction(Chunk *chunk, int offset)
 
         return offset;
     }
+    case OP_CLOSURE_LONG:
+    {
+        offset++;
+        uint32_t constant = chunk->code[offset++] |
+                            (chunk->code[offset++] << 8) |
+                            (chunk->code[offset++] << 16);
+        printf("%-16s %4d ", "OP_CLOSURE_LONG", constant);
+        printValue(chunk->constants.values[constant]);
+        printf("\n");
+
+        ObjFunction *function = AS_FUNCTION(chunk->constants.values[constant]);
+        for (int j = 0; j < function->upvalueCount; j++)
+        {
+            int isLocal = chunk->code[offset++];
+            int index = chunk->code[offset++];
+            printf("%04d      |                     %s %d\n",
+                   offset - 2, isLocal ? "local" : "upvalue", index);
+        }
+
+        return offset;
+    }
     case OP_CLOSE_UPVALUE:
         return simpleInstruction("OP_CLOSE_UPVALUE", offset);
     case OP_RETURN:

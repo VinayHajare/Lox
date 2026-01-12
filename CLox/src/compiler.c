@@ -762,7 +762,18 @@ static void function(FunctionType type)
     block();
 
     ObjFunction *function = endCompiler();
-    emitBytes(OP_CLOSURE, makeConstant(OBJ_VAL(function)));
+    int constantIndex = addConstant(currentChunk(), OBJ_VAL(function));
+    if (constantIndex < 256)
+    {
+        emitBytes(OP_CLOSURE, (uint8_t)constantIndex);
+    }
+    else
+    {
+        emitByte(OP_CLOSURE_LONG);
+        emitByte((uint8_t)(constantIndex & 0xff));
+        emitByte((uint8_t)((constantIndex >> 8) & 0xff));
+        emitByte((uint8_t)((constantIndex >> 16) & 0xff));
+    }
 
     for (int i = 0; i < function->upvalueCount; i++)
     {

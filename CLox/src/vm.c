@@ -478,6 +478,27 @@ static InterpretResult run()
             }
             break;
         }
+        case OP_CLOSURE_LONG:
+        {
+            uint32_t index = READ_24BIT_INDEX();
+            ObjFunction *function = AS_FUNCTION(frame->closure->function->chunk.constants.values[index]);
+            ObjClosure *closure = newClosure(function);
+            push(OBJ_VAL(closure));
+            for (int i = 0; i < closure->upvalueCount; i++)
+            {
+                uint8_t isLocal = READ_BYTE();
+                uint8_t index = READ_BYTE();
+                if (isLocal)
+                {
+                    closure->upvalues[i] = captureUpvalue(frame->slots + index);
+                }
+                else
+                {
+                    closure->upvalues[i] = frame->closure->upvalues[index];
+                }
+            }
+            break;
+        }
         case OP_CLOSE_UPVALUE:
         {
             closeUpvalues(vm.stackTop - 1);
