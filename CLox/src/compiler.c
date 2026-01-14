@@ -260,6 +260,21 @@ static void writeGlobalOpcode(uint8_t shortOp, uint8_t longOp, int index, int li
     }
 }
 
+static void writeConstantOpcode(uint8_t shortOp, uint8_t longOp, int index, int line)
+{
+    if (index < 256)
+    {
+        emitBytes(shortOp, (uint8_t)index);
+    }
+    else
+    {
+        emitByte(longOp);
+        emitByte((uint8_t)(index & 0xff));
+        emitByte((uint8_t)((index >> 8) & 0xff));
+        emitByte((uint8_t)((index >> 16) & 0xff));
+    }
+}
+
 static ObjFunction *endCompiler()
 {
     emitReturn();
@@ -530,6 +545,22 @@ static void call(bool canAssign)
     emitBytes(OP_CALL, argCount);
 }
 
+static void dot(bool canAssign)
+{
+    consume(TOKEN_IDENTIFIER, "Expect property name after '.'.");
+    int name = identifierConstant(&parser.previous);
+
+    if (canAssign && match(TOKEN_EQUAL))
+    {
+        expression();
+        writeConstantOpcode(OP_SET_PROPERTY, OP_SET_PROPERTY_LONG, name, parser.previous.line);
+    }
+    else
+    {
+        writeConstantOpcode(OP_GET_PROPERTY, OP_GET_PROPERTY_LONG, name, parser.previous.line);
+    }
+}
+
 static void literal(bool canAssign)
 {
     switch (parser.previous.type)
@@ -655,7 +686,7 @@ ParseRule rules[] = {
     [TOKEN_LEFT_BRACE] = {NULL, NULL, PREC_NONE},
     [TOKEN_RIGHT_BRACE] = {NULL, NULL, PREC_NONE},
     [TOKEN_COMMA] = {NULL, NULL, PREC_NONE},
-    [TOKEN_DOT] = {NULL, NULL, PREC_NONE},
+    [TOKEN_DOT] = {NULL, dot, PREC_CALL},
     [TOKEN_MINUS] = {unary, binary, PREC_TERM},
     [TOKEN_PLUS] = {NULL, binary, PREC_TERM},
     [TOKEN_SEMICOLON] = {NULL, NULL, PREC_NONE},
@@ -781,6 +812,19 @@ static void function(FunctionType type)
         emitByte(compiler.upvalues[i].isLocal ? 1 : 0);
         emitByte(compiler.upvalues[i].index);
     }
+}
+
+static void classDeclaration()
+{
+    consume(TOKEN_IDENTIFIER, "Expect class name.");
+    int nameConstant = identifierConstant(&parser.previous);
+    declareVariable();
+
+    writeConstantOpcode(OP_CLASS, OP_CLASS_LONG, nameConstant, parser.previous.line);
+    defineVariable(nameConstant);
+
+    consume(TOKEN_LEFT_BRACE, "Expect '{' before class body.");
+    consume(TOKEN_RIGHT_BRACE, "Expect '}' after class body.");
 }
 
 static void funDeclaration()
@@ -961,7 +1005,11 @@ static void synchronize()
 
 static void declaration()
 {
-    if (match(TOKEN_FUN))
+    if (match(TOKEN_CLASS))
+    {
+        classDeclaration();
+    }
+    else if (match(TOKEN_FUN))
     {
         funDeclaration();
     }
