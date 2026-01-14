@@ -38,6 +38,7 @@ typedef enum
     OP_JUMP_IF_FALSE,
     OP_LOOP,
     OP_CALL,
+    OP_INVOKE,
     OP_CLOSURE,
     OP_CLOSURE_LONG,
     OP_CLOSE_UPVALUE,
@@ -46,6 +47,7 @@ typedef enum
     OP_CLASS_LONG,
     OP_GET_PROPERTY_LONG,
     OP_SET_PROPERTY_LONG,
+    OP_METHOD
 } OpCode;
 
 typedef struct
