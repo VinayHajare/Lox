@@ -500,6 +500,7 @@ static InterpretResult run()
             {
                 return INTERPRET_RUNTIME_ERROR;
             }
+            break;
         }
         case OP_SET_PROPERTY:
         {
