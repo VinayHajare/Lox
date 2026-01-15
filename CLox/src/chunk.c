@@ -23,19 +23,22 @@ void freeChunk(Chunk *chunk)
     initChunk(chunk);
 }
 
+// chunk.c
 void writeChunk(Chunk *chunk, uint8_t byte, int line)
 {
     if (chunk->capacity < chunk->count + 1)
     {
         int oldCapacity = chunk->capacity;
         chunk->capacity = GROW_CAPACITY(oldCapacity);
-        chunk->code = GROW_ARRAY(uint8_t, chunk->code, oldCapacity, chunk->capacity);
+        chunk->code = GROW_ARRAY(uint8_t, chunk->code,
+                                 oldCapacity, chunk->capacity);
+        // Don't grow line array here...
     }
 
     chunk->code[chunk->count] = byte;
     chunk->count++;
 
-    // Check if we are on same line
+    // See if we're still on the same line.
     if (chunk->lineCount > 0 &&
         chunk->lines[chunk->lineCount - 1].line == line)
     {

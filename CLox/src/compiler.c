@@ -118,7 +118,7 @@ static void errorAt(Token *token, const char *message)
 
 static void error(const char *message)
 {
-    errorAt(&parser.current, message);
+    errorAt(&parser.previous, message);
 }
 
 static void errorAtCurrent(const char *message)
@@ -182,7 +182,7 @@ static void emitLoop(int loopStart)
 
     int offset = currentChunk()->count - loopStart + 2;
     if (offset > UINT16_MAX)
-        error("Loop body to large.");
+        error("Loop body too large.");
 
     emitByte((offset >> 8) & 0xff);
     emitByte(offset & 0xff);
@@ -207,18 +207,6 @@ static void emitReturn()
         emitByte(OP_NIL);
     }
     emitByte(OP_RETURN);
-}
-
-static uint8_t makeConstant(Value value)
-{
-    int constant = addConstant(currentChunk(), value);
-    if (constant > UINT8_MAX)
-    {
-        error("Too many constants in one chunk.");
-        return 0;
-    }
-
-    return (uint8_t)constant;
 }
 
 static void emitConstant(Value value)
@@ -701,11 +689,11 @@ static void super_(bool canAssign)
 {
     if (currentClass == NULL)
     {
-        error("Can't use 'super' outside of a class");
+        error("Can't use 'super' outside of a class.");
     }
     else if (!currentClass->hasSuperclass)
     {
-        error("Can't use 'super' in a class with no superclass");
+        error("Can't use 'super' in a class with no superclass.");
     }
 
     consume(TOKEN_DOT, "Expect '.' after 'super'.");
@@ -731,7 +719,7 @@ static void this_(bool canAssign)
 {
     if (currentClass == NULL)
     {
-        error("Can't use 'this' outside of a class");
+        error("Can't use 'this' outside of a class.");
         return;
     }
 

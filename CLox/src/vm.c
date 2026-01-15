@@ -36,8 +36,8 @@ static void runtimeError(const char *format, ...)
         CallFrame *frame = &vm.frames[i];
         ObjFunction *function = frame->closure->function;
         size_t instruction = frame->ip - function->chunk.code - 1;
-        fprintf(stderr, "[line %d] in ",
-                function->chunk.lines[instruction]);
+        int line = getLine(&frame->closure->function->chunk, (int)(frame->ip - frame->closure->function->chunk.code));
+        fprintf(stderr, "[line %d] in ", line);
         if (function->name == NULL)
         {
             fprintf(stderr, "script\n");
@@ -785,7 +785,7 @@ static InterpretResult run()
             Value superclass = peek(1);
             if (!IS_CLASS(superclass))
             {
-                runtimeError("Superclass must be a class");
+                runtimeError("Superclass must be a class.");
                 return INTERPRET_RUNTIME_ERROR;
             }
 

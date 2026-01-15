@@ -230,6 +230,15 @@ fn get_clox_tests() -> HashMap<String, String> {
     // Early chapters
     tests.insert("test/scanning".to_string(), "skip".to_string());
     tests.insert("test/expressions".to_string(), "skip".to_string());
+    // No hard limit in CLOX (can have  2^24 constants)
+    tests.insert(
+        "test/limit/no_reuse_constants.lox".to_string(),
+        "skip".to_string(),
+    );
+    tests.insert(
+        "test/limit/too_many_constants.lox".to_string(),
+        "skip".to_string(),
+    );
 
     tests
 }
