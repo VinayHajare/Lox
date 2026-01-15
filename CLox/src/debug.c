@@ -54,6 +54,18 @@ static int invokeInstruction(const char *name, Chunk *chunk, int offset)
     return offset + 3;
 }
 
+static int longInvokeInstruction(const char *name, Chunk *chunk, int offset)
+{
+    uint32_t constant = chunk->code[offset + 1] |
+                        (chunk->code[offset + 2] << 8) |
+                        (chunk->code[offset + 3] << 16);
+    uint8_t argCount = chunk->code[offset + 4];
+    printf("%-16s (%d args) %4d '", name, argCount, constant);
+    printValue(chunk->constants.values[constant]);
+    printf("'\n");
+    return offset + 5;
+}
+
 static int longConstantInstruction(const char *name, Chunk *chunk, int offset)
 {
     uint32_t constant = chunk->code[offset + 1] |
@@ -141,6 +153,10 @@ int disassembleInstruction(Chunk *chunk, int offset)
         return constantInstruction("OP_SET_PROPERTY", chunk, offset);
     case OP_SET_PROPERTY_LONG:
         return longConstantInstruction("OP_SET_PROPERTY_LONG", chunk, offset);
+    case OP_GET_SUPER:
+        return constantInstruction("OP_GET_SUPER", chunk, offset);
+    case OP_GET_SUPER_LONG:
+        return longConstantInstruction("OP_GET_SUPER_LONG", chunk, offset);
     case OP_EQUAL:
         return simpleInstruction("OP_EQUAL", offset);
     case OP_GREATER:
@@ -218,9 +234,15 @@ int disassembleInstruction(Chunk *chunk, int offset)
     case OP_INVOKE:
         return invokeInstruction("OP_INVOKE", chunk, offset);
     case OP_INVOKE_LONG:
-        return longConstantInstruction("OP_INVOKE_LONG", chunk, offset);
+        return longInvokeInstruction("OP_INVOKE_LONG", chunk, offset);
+    case OP_SUPER_INVOKE:
+        return invokeInstruction("OP_SUPER_INVOKE", chunk, offset);
+    case OP_SUPER_INVOKE_LONG:
+        return longInvokeInstruction("OP_SUPER_INVOKE_LONG", chunk, offset);
     case OP_CLASS_LONG:
         return longConstantInstruction("OP_CLASS_LONG", chunk, offset);
+    case OP_INHERIT:
+        return simpleInstruction("OP_INHERIT", offset);
     case OP_METHOD:
         return constantInstruction("OP_METHOD", chunk, offset);
     case OP_METHOD_LONG:
