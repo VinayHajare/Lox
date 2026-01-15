@@ -643,6 +643,18 @@ static InterpretResult run()
             frame = &vm.frames[vm.frameCount - 1];
             break;
         }
+        case OP_INVOKE_LONG:
+        {
+            uint32_t index = READ_24BIT_INDEX();
+            ObjString *method = AS_STRING(frame->closure->function->chunk.constants.values[index]);
+            int argCount = READ_BYTE();
+            if (!invoke(method, argCount))
+            {
+                return INTERPRET_RUNTIME_ERROR;
+            }
+            frame = &vm.frames[vm.frameCount - 1];
+            break;
+        }
         case OP_CLOSURE:
         {
             ObjFunction *function = AS_FUNCTION(READ_CONSTANT());
@@ -721,6 +733,13 @@ static InterpretResult run()
         case OP_METHOD:
         {
             defineMethod(READ_STRING());
+            break;
+        }
+        case OP_METHOD_LONG:
+        {
+            uint32_t index = READ_24BIT_INDEX();
+            ObjString *methodName = AS_STRING(frame->closure->function->chunk.constants.values[index]);
+            defineMethod(methodName);
             break;
         }
         }

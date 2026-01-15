@@ -581,7 +581,7 @@ static void dot(bool canAssign)
     else if (match(TOKEN_LEFT_PAREN))
     {
         uint8_t argCount = argumentList();
-        emitBytes(OP_INVOKE, name);
+        writeConstantOpcode(OP_INVOKE, OP_INVOKE_LONG, name, parser.previous.line);
         emitByte(argCount);
     }
     else
@@ -866,7 +866,7 @@ static void method()
     }
 
     function(type);
-    emitBytes(OP_METHOD, constant);
+    writeConstantOpcode(OP_METHOD, OP_METHOD_LONG, constant, parser.previous.line);
 }
 
 static void classDeclaration()
