@@ -1,4 +1,6 @@
 // This benchmark stresses instance creation and initializer calling.
+// Works fine with JLox but struggle with Clox due to GC not invoking at right time
+// as objects are created too fast and are small. But works if set DEBUG_STRESS_GC in common.h
 
 class Foo {
   init() {}
